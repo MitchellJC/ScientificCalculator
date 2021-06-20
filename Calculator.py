@@ -4,6 +4,7 @@ Scientific calculator application based on the CASIO fx-82AU PLUS II.
 
 __author__ = "Mitchell Clark"
 
+import math
 import tkinter as tk
 from Constants import *
 
@@ -66,14 +67,42 @@ class CalculatorApp(tk.Frame):
 
         return valid
 
-    def _request_calculation(self, entered_operations: str):
+    def add_to_display(self, input_to_add: str) -> None:
+        """Adds given input to the input screen."""
+        current_input = self._entered_operations.get()
+        current_input += input_to_add
+        self._entered_operations.set(current_input)
+    
+    def _request_calculation(self, entered_operations: str) -> None:
+        """Sends current input screen to the CalculationProcessor."""
         self._calculation_processor.process_input(entered_operations)
         
 class CalculationProcessor:
     """Handles calculating expressions given by the UI."""
     def process_input(self, entered_operations: str) -> str:
         """Process the operations in the given string."""
-        print(entered_operations)
+        expression = self._evaluate_brackets(entered_operations)
+        expression = self._evaluate_operation(expression)
+
+    def _evaluate_brackets(self, expression: str) -> str:
+        """Find brackets and evaluate expression within."""
+        first_bracket_position = expression.find(LEFT_BRACKET) # Returns -1 if cannot find.
+        second_bracket_position = expression.rfind(RIGHT_BRACKET)
+        
+        if first_bracket_position != -1 and second_bracket_position != -1:
+            evaluated_brackets = self.process_input(expression[first_bracket_position + 1:second_bracket_position])
+        else:
+            evaluated_brackets = expression
+
+        return evaluated_brackets
+
+    def _evaluate_operations(self, expression: str) -> str:
+        """Find operations such as sin, x^2 and log. Evaluate all operations and return partially evaluated expresson."""
+        # Not implemented.
+        return expression
+
+    def _evaluate_multiplication(self, expression: str) -> str:
+        """Find all multiplication operators and evaluate them. Return partially evaluated expression."""
 
 class ButtonsUI(tk.Frame):
     """Interface for all buttons on the calculator."""
@@ -170,11 +199,11 @@ class ButtonsUI(tk.Frame):
         self._ENG_button.pack(side=tk.LEFT)
 
         self._left_bracket_button = tk.Button(self._row_four, text=LEFT_BRACKET, \
-                                     width=BUTTON_WIDTH)
+                                     width=BUTTON_WIDTH, command=lambda: master.add_to_display(LEFT_BRACKET))
         self._left_bracket_button.pack(side=tk.LEFT)
 
         self._right_bracket_button = tk.Button(self._row_four, text=RIGHT_BRACKET, \
-                                     width=BUTTON_WIDTH)
+                                     width=BUTTON_WIDTH, command=lambda: master.add_to_display(RIGHT_BRACKET))
         self._right_bracket_button.pack(side=tk.LEFT)
 
         self._standard_and_decimal_button = tk.Button(self._row_four, text=STANDARD_AND_DECIMAL, \
@@ -190,15 +219,15 @@ class ButtonsUI(tk.Frame):
         self._row_five.pack()
 
         self._seven_button = tk.Button(self._row_five, text=SEVEN, \
-                                     width=BUTTON_WIDTH)
+                                     width=BUTTON_WIDTH, command=lambda: master.add_to_display(SEVEN))
         self._seven_button.pack(side=tk.LEFT)
 
         self._eight_button = tk.Button(self._row_five, text=EIGHT, \
-                                     width=BUTTON_WIDTH)
+                                     width=BUTTON_WIDTH, command=lambda: master.add_to_display(EIGHT))
         self._eight_button.pack(side=tk.LEFT)
 
         self._nine_button = tk.Button(self._row_five, text=NINE, \
-                                     width=BUTTON_WIDTH)
+                                     width=BUTTON_WIDTH, command=lambda: master.add_to_display(NINE))
         self._nine_button.pack(side=tk.LEFT)
 
         self._delete_button = tk.Button(self._row_five, text=DELETE, \
@@ -214,23 +243,23 @@ class ButtonsUI(tk.Frame):
         self._row_six.pack()
 
         self._four_button = tk.Button(self._row_six, text=FOUR, \
-                                     width=BUTTON_WIDTH)
+                                     width=BUTTON_WIDTH, command=lambda: master.add_to_display(FOUR))
         self._four_button.pack(side=tk.LEFT)
 
         self._five_button = tk.Button(self._row_six, text=FIVE, \
-                                     width=BUTTON_WIDTH)
+                                     width=BUTTON_WIDTH, command=lambda: master.add_to_display(FIVE))
         self._five_button.pack(side=tk.LEFT)
 
         self._six_button = tk.Button(self._row_six, text=SIX, \
-                                     width=BUTTON_WIDTH)
+                                     width=BUTTON_WIDTH, command=lambda: master.add_to_display(SIX))
         self._six_button.pack(side=tk.LEFT)
 
         self._multiply_button = tk.Button(self._row_six, text=MULTIPLY, \
-                                     width=BUTTON_WIDTH)
+                                     width=BUTTON_WIDTH, command=lambda: master.add_to_display(MULTIPLY))
         self._multiply_button.pack(side=tk.LEFT)
 
         self._divide_button = tk.Button(self._row_six, text=DIVIDE, \
-                                     width=BUTTON_WIDTH)
+                                     width=BUTTON_WIDTH, command=lambda: master.add_to_display(DIVIDE))
         self._divide_button.pack(side=tk.LEFT)
 
         # Seventh row.
@@ -238,23 +267,23 @@ class ButtonsUI(tk.Frame):
         self._row_seven.pack()
 
         self._one_button = tk.Button(self._row_seven, text=ONE, \
-                                     width=BUTTON_WIDTH)
+                                     width=BUTTON_WIDTH, command=lambda: master.add_to_display(ONE))
         self._one_button.pack(side=tk.LEFT)
 
         self._two_button = tk.Button(self._row_seven, text=TWO, \
-                                     width=BUTTON_WIDTH)
+                                     width=BUTTON_WIDTH, command=lambda: master.add_to_display(TWO))
         self._two_button.pack(side=tk.LEFT)
 
         self._three_button = tk.Button(self._row_seven, text=THREE, \
-                                     width=BUTTON_WIDTH)
+                                     width=BUTTON_WIDTH, command=lambda: master.add_to_display(THREE))
         self._three_button.pack(side=tk.LEFT)
 
         self._plus_button = tk.Button(self._row_seven, text=PLUS, \
-                                     width=BUTTON_WIDTH)
+                                     width=BUTTON_WIDTH, command=lambda: master.add_to_display(PLUS))
         self._plus_button.pack(side=tk.LEFT)
 
         self._minus_button = tk.Button(self._row_seven, text=MINUS, \
-                                     width=BUTTON_WIDTH)
+                                     width=BUTTON_WIDTH, command=lambda: master.add_to_display(MINUS))
         self._minus_button.pack(side=tk.LEFT)
 
         # Eighth row.
@@ -262,11 +291,11 @@ class ButtonsUI(tk.Frame):
         self._row_eight.pack()
 
         self._zero_button = tk.Button(self._row_eight, text=ZERO, \
-                                     width=BUTTON_WIDTH)
+                                     width=BUTTON_WIDTH, command=lambda: master.add_to_display(ZERO))
         self._zero_button.pack(side=tk.LEFT)
 
         self._dot_button = tk.Button(self._row_eight, text=DOT, \
-                                     width=BUTTON_WIDTH)
+                                     width=BUTTON_WIDTH, command=lambda: master.add_to_display(DOT))
         self._dot_button.pack(side=tk.LEFT)
 
         self._scientific_notation_button = tk.Button(self._row_eight, text=SCIENTIFIC_NOTATION, \
@@ -280,15 +309,6 @@ class ButtonsUI(tk.Frame):
         self._equals_button = tk.Button(self._row_eight, text=EQUALS, \
                                      width=BUTTON_WIDTH)
         self._equals_button.pack(side=tk.LEFT)
-        
-            
-class InputScreen(tk.Canvas):
-    """The input screen for the calculator. Displays numbers and operations
-    entered by the user."""
-    def __init__(self, master: tk.Tk, **kwargs) -> None:
-        """Initialises new input screen."""
-        super().__init__(master)
-        self.master = master
         
 def main():
     """Entry point to application."""
