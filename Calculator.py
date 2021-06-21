@@ -8,7 +8,6 @@ import math
 import tkinter as tk
 from Constants import *
 
-
 class CalculatorApp(tk.Frame):
     """The main calculator UI application which contains an input screen and
     and buttons."""
@@ -42,7 +41,7 @@ class CalculatorApp(tk.Frame):
         #
         self._calculation_processor = CalculationProcessor()
         
-        self._master.bind('<Return>', lambda x: self._request_calculation(self._entered_operations.get()))
+        self._master.bind('<Return>', self.request_calculation)
         self._master.mainloop()
         
     def _is_valid(self, possible_string: str) -> bool:
@@ -72,13 +71,29 @@ class CalculatorApp(tk.Frame):
         current_input = self._entered_operations.get()
         current_input += input_to_add
         self._entered_operations.set(current_input)
+        self._input_screen.icursor(len(current_input))
+        
 
     def all_clear(self) -> None:
         """Clear the input display."""
         self._entered_operations.set("")
+        self._output_message.set("")
+
+    def delete(self) -> None:
+        """Deletes the character behind the cursor location or deletes the last character if cursor is not on input display."""
+        cursor_position = self._input_screen.index(tk.INSERT)
+        current_input = self._entered_operations.get()
+        if cursor_position == 0:
+            current_input = current_input[:-1]
+        else:
+            current_input = current_input[:cursor_position - 1] + current_input[cursor_position:]
+            self._input_screen.icursor(cursor_position - 1)
+            
+        self._entered_operations.set(current_input)    
     
-    def _request_calculation(self, entered_operations: str) -> None:
+    def request_calculation(self, event: tk.Event = None) -> None:
         """Sends current input screen to the CalculationProcessor."""
+        entered_operations = self._entered_operations.get()
         final_evaluation = self._calculation_processor.process_input(entered_operations)
         self._output_message.set(final_evaluation)
         
@@ -92,7 +107,6 @@ class CalculationProcessor:
         expression = self._evaluate_multiplication_division(expression)
 
         return expression
-
 
     def _evaluate_brackets(self, expression: str) -> str:
         """Find brackets and evaluate expression within."""
@@ -113,42 +127,48 @@ class CalculationProcessor:
 
     def _evaluate_multiplication_division(self, expression: str) -> str:
         """Find all multiplication and division operators and evaluate them. Return partially evaluated expression."""
-        # Create list of all operators and their indices.
-        operation_indices = []
-        for index in range(len(expression)):
-            if expression[index] == MULTIPLY:
-                operation_indices.append((index, MULTIPLY))
-            elif expression[index] == DIVIDE:
-                operation_indices.append((index, DIVIDE))
-
-        # Need to change this, operation indices change with new expression.        
-        for index in range(len(operation_indices)):
-            first_operation_info = operation_indices[index]
-            first_operation_index, first_operation = first_operation_info
-
-            if index + 1 == len(operation_indices):
-                second_operation_index = len(expression) 
-            else:
-                second_operation_info = operation_indices[index + 1]
-                second_operation_index = second_operation_info[0]
-            print(second_operation_index)
+        # Need to style this code better.
+        while DIVIDE in expression or MULTIPLY in expression:
+            left_number_indices = []
+            right_number_indices = []
+            finding_left_number = True
+            multiplying = False
+            dividing = False
             
-            left_number = expression[:first_operation_index]
-            left_number = float(left_number)
-            right_number = expression[first_operation_index + 1:second_operation_index]
-            right_number = float(right_number)
+            for index in range(len(expression)):
+                character = expression[index]
+                if character in NUMBER_PARTS:
+                    if finding_left_number:
+                        left_number_indices.append(index)
+                    else:
+                        right_number_indices.append(index)
+                        
+                elif multiplying or dividing:
+                    break        
+                elif character is MULTIPLY:
+                    multiplying = True
+                    finding_left_number = False
+                elif character is DIVIDE:
+                    dividing = True
+                    finding_left_number = False
+                else:
+                    left_number_indices = []
 
-            if first_operation is MULTIPLY:
+            left_number = float(expression[left_number_indices[0]:left_number_indices[-1] + 1])
+            right_number = float(expression[right_number_indices[0]:right_number_indices[-1] + 1])
+
+            if multiplying:
                 calculated_number = left_number * right_number
-            else:
+                calculated_number = str(calculated_number)
+                expression = expression.replace(expression[left_number_indices[0]:right_number_indices[-1] + 1], calculated_number)
+
+            elif dividing:
                 calculated_number = left_number / right_number
-            calculated_number = str(calculated_number)
-
-            expression = expression[second_operation_index:]
-            expression = calculated_number + expression
-
+                calculated_number = str(calculated_number)
+                expression = expression.replace(expression[left_number_indices[0]:right_number_indices[-1] + 1], calculated_number)
+                
         return expression
-
+    
 class ButtonsUI(tk.Frame):
     """Interface for all buttons on the calculator."""
     def __init__(self, master: tk.Tk, **kwargs) -> None:
@@ -276,7 +296,7 @@ class ButtonsUI(tk.Frame):
         self._nine_button.pack(side=tk.LEFT)
 
         self._delete_button = tk.Button(self._row_five, text=DELETE, \
-                                     width=BUTTON_WIDTH)
+                                     width=BUTTON_WIDTH, command=master.delete)
         self._delete_button.pack(side=tk.LEFT)
 
         self._all_clear_button = tk.Button(self._row_five, text=ALL_CLEAR, \
@@ -352,7 +372,7 @@ class ButtonsUI(tk.Frame):
         self._answer_button.pack(side=tk.LEFT)
 
         self._equals_button = tk.Button(self._row_eight, text=EQUALS, \
-                                     width=BUTTON_WIDTH)
+                                     width=BUTTON_WIDTH, command=master.request_calculation)
         self._equals_button.pack(side=tk.LEFT)
         
 def main():

@@ -62,6 +62,8 @@ SCIENTIFIC_NOTATION = "×10^x"
 ANSWER = "Ans"
 EQUALS = "="
 
-ALLOWED_KEYBOARD_ENTERED_OPERATIONS = ('+', '-', '×', '/', '!', '(', ')')
+ALLOWED_KEYBOARD_ENTERED_OPERATIONS = ('+', '-', '×', '/', '!', '(', ')', '.')
 OPERATIONS = ('+', '-', '×', '/', '!', '(', ')')
-MATH_ERROR = "MATH ERROR"
+NUMBER_PARTS = ('1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '.')
+MATH_ERROR = "Math ERROR"
+SYNTAX_ERROR = "Syntax ERROR"
