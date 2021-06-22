@@ -99,10 +99,10 @@ class CalculatorApp(tk.Frame):
         
 class CalculationProcessor:
     """Handles calculating expressions given by the UI."""
-    def process_input(self, entered_operations: str) -> str:
+    def process_input(self, expression: str) -> str:
         """Process the operations in the given string."""
     
-        expression = self._evaluate_brackets(entered_operations)
+        expression = self._evaluate_brackets(expression)
         expression = self._evaluate_operations(expression)
         expression = self._evaluate_basic_operators(expression, MULTIPLICATION_AND_DIVISION)
         expression = self._evaluate_basic_operators(expression, ADDITION_AND_SUBTRACTION)
@@ -110,16 +110,16 @@ class CalculationProcessor:
         return expression
 
     def _evaluate_brackets(self, expression: str) -> str:
-        """Find brackets and evaluate expression within."""
+        """Find all brackets and evaluate expression within appropriately."""
         first_bracket_position = expression.find(LEFT_BRACKET) # Returns -1 if cannot find.
         second_bracket_position = expression.rfind(RIGHT_BRACKET)
         
         if first_bracket_position != -1 and second_bracket_position != -1:
             evaluated_brackets = self.process_input(expression[first_bracket_position + 1:second_bracket_position])
-        else:
-            evaluated_brackets = expression
-
-        return evaluated_brackets
+            old_part_of_expression = expression[first_bracket_position:second_bracket_position + 1]
+            expression = expression.replace(old_part_of_expression, evaluated_brackets)
+        
+        return expression
 
     def _evaluate_operations(self, expression: str) -> str:
         """Find operations such as sin, x^2 and log. Evaluate all operations and return partially evaluated expresson."""
@@ -129,18 +129,17 @@ class CalculationProcessor:
     def _evaluate_basic_operators(self, expression: str, operator_pair: str) -> str:
         """Find all operators given in operator pair and evaluate them. The operator pair can contain multiplication and division, or addition and subtraction.
         Return partially evaluated expression."""
-        # Need to style this code better.
         operator_symbol1, operator_symbol2 = OPERATOR_SYMBOLS[operator_pair]
-        while operator_symbol1 in expression or operator_symbol2 in expression:
+        while operator_symbol1 in expression or operator_symbol2 in expression[1:]: # expression[1:] takes into account (-)ve nums.
             left_number_indices = []
             right_number_indices = []
             finding_left_number = True
             operation1 = False
             operation2 = False
             
-            for index in range(len(expression)):
+            for index in range(len(expression)):  
                 character = expression[index]
-                # Find nums on the left and right of the leftmost operator
+                # Find nums on the left and right of the leftmost operator.
                 if character in NUMBER_PARTS:
                     if finding_left_number:
                         left_number_indices.append(index)
@@ -181,7 +180,7 @@ class CalculationProcessor:
             calculated_number = str(calculated_number)
             old_part_of_expression = expression[left_number_start_index:right_number_end_index + 1]
             expression = expression.replace(old_part_of_expression, calculated_number)
-            
+ 
         return expression
     
 class ButtonsUI(tk.Frame):
