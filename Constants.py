@@ -67,3 +67,8 @@ OPERATIONS = ('+', '-', '×', '/', '!', '(', ')')
 NUMBER_PARTS = ('1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '.')
 MATH_ERROR = "Math ERROR"
 SYNTAX_ERROR = "Syntax ERROR"
+
+# CalculationProcessor
+MULTIPLICATION_AND_DIVISION = "MultiplicationAndDivision"
+ADDITION_AND_SUBTRACTION = "AdditionAndSubtraction"
+OPERATOR_SYMBOLS = {MULTIPLICATION_AND_DIVISION:(MULTIPLY, DIVIDE), ADDITION_AND_SUBTRACTION:(PLUS, MINUS)}

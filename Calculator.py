@@ -104,7 +104,8 @@ class CalculationProcessor:
     
         expression = self._evaluate_brackets(entered_operations)
         expression = self._evaluate_operations(expression)
-        expression = self._evaluate_multiplication_division(expression)
+        expression = self._evaluate_basic_operators(expression, MULTIPLICATION_AND_DIVISION)
+        expression = self._evaluate_basic_operators(expression, ADDITION_AND_SUBTRACTION)
 
         return expression
 
@@ -125,48 +126,62 @@ class CalculationProcessor:
         # Not implemented.
         return expression
 
-    def _evaluate_multiplication_division(self, expression: str) -> str:
-        """Find all multiplication and division operators and evaluate them. Return partially evaluated expression."""
+    def _evaluate_basic_operators(self, expression: str, operator_pair: str) -> str:
+        """Find all operators given in operator pair and evaluate them. The operator pair can contain multiplication and division, or addition and subtraction.
+        Return partially evaluated expression."""
         # Need to style this code better.
-        while DIVIDE in expression or MULTIPLY in expression:
+        operator_symbol1, operator_symbol2 = OPERATOR_SYMBOLS[operator_pair]
+        while operator_symbol1 in expression or operator_symbol2 in expression:
             left_number_indices = []
             right_number_indices = []
             finding_left_number = True
-            multiplying = False
-            dividing = False
+            operation1 = False
+            operation2 = False
             
             for index in range(len(expression)):
                 character = expression[index]
+                # Find nums on the left and right of the leftmost operator
                 if character in NUMBER_PARTS:
                     if finding_left_number:
                         left_number_indices.append(index)
                     else:
                         right_number_indices.append(index)
-                        
-                elif multiplying or dividing:
+                elif operation1 or operation2:
                     break        
-                elif character is MULTIPLY:
-                    multiplying = True
+                elif character is operator_symbol1:
+                    operation1 = True
                     finding_left_number = False
-                elif character is DIVIDE:
-                    dividing = True
+                elif character is operator_symbol2:
+                    operation2 = True
                     finding_left_number = False
                 else:
                     left_number_indices = []
 
-            left_number = float(expression[left_number_indices[0]:left_number_indices[-1] + 1])
-            right_number = float(expression[right_number_indices[0]:right_number_indices[-1] + 1])
-
-            if multiplying:
-                calculated_number = left_number * right_number
-                calculated_number = str(calculated_number)
-                expression = expression.replace(expression[left_number_indices[0]:right_number_indices[-1] + 1], calculated_number)
-
-            elif dividing:
-                calculated_number = left_number / right_number
-                calculated_number = str(calculated_number)
-                expression = expression.replace(expression[left_number_indices[0]:right_number_indices[-1] + 1], calculated_number)
+            # Extract left and right nums from expression.
+            left_number_start_index = left_number_indices[0]
+            left_number_end_index = left_number_indices[-1]
+            right_number_start_index = right_number_indices[0]
+            right_number_end_index = right_number_indices[-1]
+            left_number = expression[left_number_start_index:left_number_end_index + 1]
+            right_number = expression[right_number_start_index:right_number_end_index + 1]
+            left_number = float(left_number)
+            right_number = float(right_number)
+            
+            if operation1:
+                if operator_pair == MULTIPLICATION_AND_DIVISION:
+                    calculated_number = left_number * right_number
+                else:
+                    calculated_number = left_number + right_number
+            elif operation2:
+                if operator_pair == MULTIPLICATION_AND_DIVISION:
+                    calculated_number = left_number / right_number
+                else:
+                    calculated_number = left_number - right_number
                 
+            calculated_number = str(calculated_number)
+            old_part_of_expression = expression[left_number_start_index:right_number_end_index + 1]
+            expression = expression.replace(old_part_of_expression, calculated_number)
+            
         return expression
     
 class ButtonsUI(tk.Frame):
