@@ -13,11 +13,11 @@ X_FACTORIAL = "x!"
 
 # Row two.
 FRACTION = "□/■"
-X_ROOTED = "sqrt(□)"
+X_ROOTED = "√(□)"
 X_SQUARED = "x^2"
 X_POWERED = "x^□"
 LOG = "log"
-LN = "Ln"
+LN = "ln"
 
 # Row three.
 NEGATIVE_SIGN = "(-)"
@@ -65,6 +65,7 @@ EQUALS = "="
 
 ALLOWED_KEYBOARD_ENTERED_OPERATIONS = ('+', '-', '×', '/', '!', '(', ')', '.')
 OPERATIONS = ('+', '-', '×', '/', '!', '(', ')')
+ADVANCED_OPERATIONS = ('^', '√', '!', '|', 'log', 'ln', 'sin', 'cos', 'tan')
 NUMBER_PARTS = ('1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '.')
 MATH_ERROR = "Math ERROR"
 SYNTAX_ERROR = "Syntax ERROR"

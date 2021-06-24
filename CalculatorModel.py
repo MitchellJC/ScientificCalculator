@@ -3,6 +3,7 @@
 __author__= "Mitchell Clark"
 
 from Constants import *
+import math
 
 class CalculationProcessor:
     """Handles calculating expressions given by the UI."""
@@ -96,6 +97,10 @@ class CalculationProcessor:
             expression = expression.replace(old_part_of_expression, calculated_number)
  
         return expression
+
+    def _evaluate_factorial(self, expression: str) -> str:
+        """With a given string evaluate and return its factorial."""
+        raise NotImplementedError
 
 if __name__ == "__main__":
     print(NOT_STANDALONE)

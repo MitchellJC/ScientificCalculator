@@ -18,26 +18,22 @@ class CalculatorApp(tk.Frame):
 
         # Input display.
         self._entered_operations = tk.StringVar()
-
         self._is_valid_command = self.register(self._is_valid)
         self._input_screen = tk.Entry(self, textvariable=self._entered_operations,\
                                       validate='key', \
                                       validatecommand=(self._is_valid_command,'%S'))
-
         self._input_screen.pack(fill=tk.X)
 
         # Output display.
         self._output_message = tk.StringVar()
-
         self._output_screen = tk.Label(self, justify=tk.RIGHT, textvariable=self._output_message, bg="white", anchor=tk.E)
         self._output_screen.pack(fill=tk.X)
 
-        #
         self._buttons_ui = ButtonsUI(self)
         self._buttons_ui.pack()
 
-        #
         self._calculation_processor = CalculationProcessor()
+        self._last_answer = ""
         
         self._master.bind('<Return>', self.request_calculation)
         self._master.mainloop()
@@ -296,7 +292,7 @@ class ButtonsUI(tk.Frame):
         self._scientific_notation_button.pack(side=tk.LEFT)
 
         self._answer_button = tk.Button(self._row_eight, text=ANSWER, \
-                                     width=BUTTON_WIDTH)
+                                     width=BUTTON_WIDTH, command=lambda: master.add_to_display(ANSWER))
         self._answer_button.pack(side=tk.LEFT)
 
         self._equals_button = tk.Button(self._row_eight, text=EQUALS, \
