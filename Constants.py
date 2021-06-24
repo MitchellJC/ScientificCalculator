@@ -1,4 +1,5 @@
 APP_TITLE = "ScientificCalculator"
+NOT_STANDALONE = "This is not a standalone module. Please run CalculatorView.py."
 
 BUTTON_WIDTH = 8
 INPUT_DISPLAY_WIDTH = BUTTON_WIDTH*8
@@ -72,3 +73,6 @@ SYNTAX_ERROR = "Syntax ERROR"
 MULTIPLICATION_AND_DIVISION = "MultiplicationAndDivision"
 ADDITION_AND_SUBTRACTION = "AdditionAndSubtraction"
 OPERATOR_SYMBOLS = {MULTIPLICATION_AND_DIVISION:(MULTIPLY, DIVIDE), ADDITION_AND_SUBTRACTION:(PLUS, MINUS)}
+
+if __name__ == "__main__":
+    print(NOT_STANDALONE)
