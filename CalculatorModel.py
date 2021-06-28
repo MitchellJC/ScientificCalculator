@@ -9,12 +9,13 @@ class CalculationProcessor:
     """Handles calculating expressions given by the UI."""
     def process_input(self, expression: str) -> str:
         """Process the operations in the given string."""
-    
         expression = self._evaluate_brackets(expression)
         expression = self._evaluate_operations(expression)
-        expression = self._evaluate_basic_operators(expression, MULTIPLICATION_AND_DIVISION)
-        expression = self._evaluate_basic_operators(expression, ADDITION_AND_SUBTRACTION)
-
+        
+        basic_operator_split = self._split_operators(expression)
+        self._evaluate_basic_operators(basic_operator_split, (MULTIPLY, DIVIDE))
+        self._evaluate_basic_operators(basic_operator_split, (PLUS, MINUS))
+        expression = "".join(basic_operator_split)
         return expression
 
     def _evaluate_brackets(self, expression: str) -> str:
@@ -37,64 +38,63 @@ class CalculationProcessor:
 
     def _evaluate_operations(self, expression: str) -> str:
         """Find operations such as sin, x^2 and log. Evaluate all operations and return partially evaluated expresson."""
-        # Not implemented.
         return expression
 
-    def _evaluate_basic_operators(self, expression: str, operator_pair: str) -> str:
+    def _split_operators(self, expression: str) -> list:
+        """Split an expression into a list containing elements seperated by operators. E.g. _split_basic_operators("302.2+3×6")
+        returns ['302.2', '+', '3', '×', '6']"""
+        operation_splits = []
+        element = ""
+        for index in range(len(expression)):
+            character = expression[index]
+            if index == 0 or character in NUMBER_PARTS:
+                element += character
+                
+                last_index = len(expression) - 1
+                if index == last_index:
+                    operation_splits.append(element)
+                    
+            else:
+                operation_splits.append(element)
+                operation_splits.append(character)
+                element = ""
+                
+        return operation_splits
+
+    def _split_brackets(self, expression: str) -> list:
+        """Split expression into a list seperated by brackets that are not attached to a function.
+        E.g. _split_brackets("(32+4)×(3+sin(30))") returns ['(', '32+4', ')', '×', '(', '3+sin(30)', ')']"""
+        function_brackets = False
+        element = ""
+        for index in range(len(expression)):
+            character = expression[index]
+            if character not in BRACKETS:
+                element += character
+            ####
+    
+    def _evaluate_basic_operators(self, expression: list, operator_pair: tuple) -> list:
         """Find all operators given in operator pair and evaluate them. The operator pair can contain multiplication and division, or addition and subtraction.
         Return partially evaluated expression."""
-        # Need to fix for large numbers where scientific notation appears.
-        operator_symbol1, operator_symbol2 = OPERATOR_SYMBOLS[operator_pair]
-        while operator_symbol1 in expression[1:] or operator_symbol2 in expression[1:]: # expression[1:] takes into account (-)ve nums.
-            left_number_indices = []
-            right_number_indices = []
-            finding_left_number = True
-            operation1 = False
-            operation2 = False
-            
-            for index in range(len(expression)):  
-                character = expression[index]
-                # Find nums on the left and right of the leftmost operator.
-                if character in NUMBER_PARTS:
-                    if finding_left_number:
-                        left_number_indices.append(index)
-                    else:
-                        right_number_indices.append(index)
-                elif operation1 or operation2:
-                    break        
-                elif character is operator_symbol1 and index != 0:
-                    operation1 = True
-                    finding_left_number = False
-                elif character is operator_symbol2 and index != 0:
-                    operation2 = True
-                    finding_left_number = False
-                else:
-                    left_number_indices = []
-
-            # Extract left and right nums from expression.
-            left_number_start_index = left_number_indices[0]
-            left_number_end_index = left_number_indices[-1]
-            right_number_start_index = right_number_indices[0]
-            right_number_end_index = right_number_indices[-1]
-            left_number = expression[left_number_start_index:left_number_end_index + 1]
-            right_number = expression[right_number_start_index:right_number_end_index + 1]
-            left_number = float(left_number)
-            right_number = float(right_number)
-            
-            if operation1:
-                if operator_pair == MULTIPLICATION_AND_DIVISION:
-                    calculated_number = left_number * right_number
-                else:
-                    calculated_number = left_number + right_number
-            elif operation2:
-                if operator_pair == MULTIPLICATION_AND_DIVISION:
-                    calculated_number = left_number / right_number
-                else:
-                    calculated_number = left_number - right_number
+        basic_operations = {MULTIPLY:lambda x, y: x * y, DIVIDE:lambda x, y: x / y, \
+                            PLUS:lambda x, y: x + y, MINUS:lambda x, y: x - y}
+        operation1, operation2 = operator_pair 
+        
+        while operation1 in expression or operation2 in expression:
+            try: operation1_position = expression.index(operation1)
+            except: operation1_position = len(expression)
+            try: operation2_position = expression.index(operation2)
+            except: operation2_position = len(expression)
                 
-            calculated_number = str(calculated_number)
-            old_part_of_expression = expression[left_number_start_index:right_number_end_index + 1]
-            expression = expression.replace(old_part_of_expression, calculated_number)
+            leftmost_operation_position = min(operation1_position, operation2_position)
+            operation_undertaken = expression[leftmost_operation_position]
+            left_number = float(expression[leftmost_operation_position - 1])
+            right_number = float(expression[leftmost_operation_position + 1])
+
+            evaluated_number = basic_operations[operation_undertaken](left_number, right_number)
+
+            for count in range(3):
+                expression.pop(leftmost_operation_position - 1)
+            expression.insert(leftmost_operation_position - 1, str(evaluated_number))
  
         return expression
 

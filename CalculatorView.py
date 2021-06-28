@@ -3,7 +3,6 @@
 __author__ = "Mitchell Clark"
 
 import tkinter as tk
-from Constants import *
 from CalculatorModel import *
 
 class CalculatorApp(tk.Frame):
@@ -40,13 +39,7 @@ class CalculatorApp(tk.Frame):
         
     def _is_valid(self, possible_string: str) -> bool:
         """Tests a given string and returns true if it contains only allowed
-        characters and false otherwise.
-
-        Parameters:
-            possible_string(str): String to be tested E.g. "2+2m".
-
-        Allowed Characters:
-            All digits 0-9 aswell as all basic operation symbols i.e. '+','-'"""
+        characters and false otherwise."""
         valid = True
         for character in possible_string:
             character_valid = True
@@ -106,15 +99,12 @@ class ButtonsUI(tk.Frame):
         self._abs_button = tk.Button(self._row_one, text=ABSOLUTE_VALUE, \
                                      width=BUTTON_WIDTH)
         self._abs_button.pack(side=tk.LEFT)
-        
         self._cubed_button = tk.Button(self._row_one, text=X_CUBED, \
                                      width=BUTTON_WIDTH)
         self._cubed_button.pack(side=tk.LEFT)
-
         self._inverse_button = tk.Button(self._row_one, text=X_INVERSE, \
                                      width=BUTTON_WIDTH)
         self._inverse_button.pack(side=tk.LEFT)
-
         self._factorial_button = tk.Button(self._row_one, text=X_FACTORIAL, \
                                      width=BUTTON_WIDTH)
         self._factorial_button.pack(side=tk.LEFT)
@@ -126,23 +116,18 @@ class ButtonsUI(tk.Frame):
         self._fraction_button = tk.Button(self._row_two, text=FRACTION, \
                                      width=BUTTON_WIDTH)
         self._fraction_button.pack(side=tk.LEFT)
-
         self._square_root_button = tk.Button(self._row_two, text=X_ROOTED, \
                                      width=BUTTON_WIDTH)
         self._square_root_button.pack(side=tk.LEFT)
-
         self._squared_button = tk.Button(self._row_two, text=X_SQUARED, \
                                      width=BUTTON_WIDTH)
         self._squared_button.pack(side=tk.LEFT)
-
         self._powered_button = tk.Button(self._row_two, text=X_POWERED, \
                                      width=BUTTON_WIDTH)
         self._powered_button.pack(side=tk.LEFT)
-
         self._log_button = tk.Button(self._row_two, text=LOG, \
                                      width=BUTTON_WIDTH)
         self._log_button.pack(side=tk.LEFT)
-        
         self._ln_button = tk.Button(self._row_two, text=LN, \
                                      width=BUTTON_WIDTH)
         self._ln_button.pack(side=tk.LEFT)
@@ -154,15 +139,12 @@ class ButtonsUI(tk.Frame):
         self._negative_sign_button = tk.Button(self._row_three, text=NEGATIVE_SIGN, \
                                      width=BUTTON_WIDTH)
         self._negative_sign_button.pack(side=tk.LEFT)
-
         self._timecalc_button = tk.Button(self._row_three, text=TIME_CALCULATIONS, \
                                      width=BUTTON_WIDTH)
         self._timecalc_button.pack(side=tk.LEFT)
-
         self._hyperbolic_button = tk.Button(self._row_three, text=HYPERBOLIC, \
                                      width=BUTTON_WIDTH)
         self._hyperbolic_button.pack(side=tk.LEFT)
-
         self._sin_button = tk.Button(self._row_three, text=SIN, \
                                      width=BUTTON_WIDTH)
         self._sin_button.pack(side=tk.LEFT)
@@ -170,7 +152,6 @@ class ButtonsUI(tk.Frame):
         self._cos_button = tk.Button(self._row_three, text=COS, \
                                      width=BUTTON_WIDTH)
         self._cos_button.pack(side=tk.LEFT)
-        
         self._tan_button = tk.Button(self._row_three, text=TAN, \
                                      width=BUTTON_WIDTH)
         self._tan_button.pack(side=tk.LEFT)
@@ -182,23 +163,18 @@ class ButtonsUI(tk.Frame):
         self._RCL_button = tk.Button(self._row_four, text=RCL, \
                                      width=BUTTON_WIDTH)
         self._RCL_button.pack(side=tk.LEFT)
-
         self._ENG_button = tk.Button(self._row_four, text=ENG, \
                                      width=BUTTON_WIDTH)
         self._ENG_button.pack(side=tk.LEFT)
-
         self._left_bracket_button = tk.Button(self._row_four, text=LEFT_BRACKET, \
                                      width=BUTTON_WIDTH, command=lambda: master.add_to_display(LEFT_BRACKET))
         self._left_bracket_button.pack(side=tk.LEFT)
-
         self._right_bracket_button = tk.Button(self._row_four, text=RIGHT_BRACKET, \
                                      width=BUTTON_WIDTH, command=lambda: master.add_to_display(RIGHT_BRACKET))
         self._right_bracket_button.pack(side=tk.LEFT)
-
         self._standard_and_decimal_button = tk.Button(self._row_four, text=STANDARD_AND_DECIMAL, \
                                      width=BUTTON_WIDTH)
         self._standard_and_decimal_button.pack(side=tk.LEFT)
-
         self._mplus_button = tk.Button(self._row_four, text=M_PLUS, \
                                      width=BUTTON_WIDTH)
         self._mplus_button.pack(side=tk.LEFT)
@@ -210,19 +186,15 @@ class ButtonsUI(tk.Frame):
         self._seven_button = tk.Button(self._row_five, text=SEVEN, \
                                      width=BUTTON_WIDTH, command=lambda: master.add_to_display(SEVEN))
         self._seven_button.pack(side=tk.LEFT)
-
         self._eight_button = tk.Button(self._row_five, text=EIGHT, \
                                      width=BUTTON_WIDTH, command=lambda: master.add_to_display(EIGHT))
         self._eight_button.pack(side=tk.LEFT)
-
         self._nine_button = tk.Button(self._row_five, text=NINE, \
                                      width=BUTTON_WIDTH, command=lambda: master.add_to_display(NINE))
         self._nine_button.pack(side=tk.LEFT)
-
         self._delete_button = tk.Button(self._row_five, text=DELETE, \
                                      width=BUTTON_WIDTH, command=master.delete)
         self._delete_button.pack(side=tk.LEFT)
-
         self._all_clear_button = tk.Button(self._row_five, text=ALL_CLEAR, \
                                      width=BUTTON_WIDTH, command=master.all_clear)
         self._all_clear_button.pack(side=tk.LEFT)
@@ -234,19 +206,15 @@ class ButtonsUI(tk.Frame):
         self._four_button = tk.Button(self._row_six, text=FOUR, \
                                      width=BUTTON_WIDTH, command=lambda: master.add_to_display(FOUR))
         self._four_button.pack(side=tk.LEFT)
-
         self._five_button = tk.Button(self._row_six, text=FIVE, \
                                      width=BUTTON_WIDTH, command=lambda: master.add_to_display(FIVE))
         self._five_button.pack(side=tk.LEFT)
-
         self._six_button = tk.Button(self._row_six, text=SIX, \
                                      width=BUTTON_WIDTH, command=lambda: master.add_to_display(SIX))
         self._six_button.pack(side=tk.LEFT)
-
         self._multiply_button = tk.Button(self._row_six, text=MULTIPLY, \
                                      width=BUTTON_WIDTH, command=lambda: master.add_to_display(MULTIPLY))
         self._multiply_button.pack(side=tk.LEFT)
-
         self._divide_button = tk.Button(self._row_six, text=DIVIDE, \
                                      width=BUTTON_WIDTH, command=lambda: master.add_to_display(DIVIDE))
         self._divide_button.pack(side=tk.LEFT)
@@ -258,19 +226,15 @@ class ButtonsUI(tk.Frame):
         self._one_button = tk.Button(self._row_seven, text=ONE, \
                                      width=BUTTON_WIDTH, command=lambda: master.add_to_display(ONE))
         self._one_button.pack(side=tk.LEFT)
-
         self._two_button = tk.Button(self._row_seven, text=TWO, \
                                      width=BUTTON_WIDTH, command=lambda: master.add_to_display(TWO))
         self._two_button.pack(side=tk.LEFT)
-
         self._three_button = tk.Button(self._row_seven, text=THREE, \
                                      width=BUTTON_WIDTH, command=lambda: master.add_to_display(THREE))
         self._three_button.pack(side=tk.LEFT)
-
         self._plus_button = tk.Button(self._row_seven, text=PLUS, \
                                      width=BUTTON_WIDTH, command=lambda: master.add_to_display(PLUS))
         self._plus_button.pack(side=tk.LEFT)
-
         self._minus_button = tk.Button(self._row_seven, text=MINUS, \
                                      width=BUTTON_WIDTH, command=lambda: master.add_to_display(MINUS))
         self._minus_button.pack(side=tk.LEFT)
@@ -282,19 +246,15 @@ class ButtonsUI(tk.Frame):
         self._zero_button = tk.Button(self._row_eight, text=ZERO, \
                                      width=BUTTON_WIDTH, command=lambda: master.add_to_display(ZERO))
         self._zero_button.pack(side=tk.LEFT)
-
         self._dot_button = tk.Button(self._row_eight, text=DOT, \
                                      width=BUTTON_WIDTH, command=lambda: master.add_to_display(DOT))
         self._dot_button.pack(side=tk.LEFT)
-
         self._scientific_notation_button = tk.Button(self._row_eight, text=SCIENTIFIC_NOTATION, \
                                      width=BUTTON_WIDTH)
         self._scientific_notation_button.pack(side=tk.LEFT)
-
         self._answer_button = tk.Button(self._row_eight, text=ANSWER, \
                                      width=BUTTON_WIDTH, command=lambda: master.add_to_display(ANSWER))
         self._answer_button.pack(side=tk.LEFT)
-
         self._equals_button = tk.Button(self._row_eight, text=EQUALS, \
                                      width=BUTTON_WIDTH, command=master.request_calculation)
         self._equals_button.pack(side=tk.LEFT)
