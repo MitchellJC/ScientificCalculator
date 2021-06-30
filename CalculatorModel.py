@@ -15,7 +15,7 @@ class CalculationProcessor:
         basic_operator_split = self._split_operators(expression)
         self._evaluate_basic_operators(basic_operator_split, (MULTIPLY, DIVIDE))
         self._evaluate_basic_operators(basic_operator_split, (PLUS, MINUS))
-        expression = "".join(basic_operator_split)
+        expression = BLANK.join(basic_operator_split)
         return expression
 
     def _evaluate_brackets(self, expression: str) -> str:
@@ -44,7 +44,7 @@ class CalculationProcessor:
         """Split an expression into a list containing elements seperated by operators. E.g. _split_basic_operators("302.2+3×6")
         returns ['302.2', '+', '3', '×', '6']"""
         operation_splits = []
-        element = ""
+        element = BLANK
         for index in range(len(expression)):
             character = expression[index]
             if index == 0 or character in NUMBER_PARTS:
@@ -57,21 +57,41 @@ class CalculationProcessor:
             else:
                 operation_splits.append(element)
                 operation_splits.append(character)
-                element = ""
+                element = BLANK
                 
         return operation_splits
 
     def _split_brackets(self, expression: str) -> list:
         """Split expression into a list seperated by brackets that are not attached to a function.
         E.g. _split_brackets("(32+4)×(3+sin(30))") returns ['(', '32+4', ')', '×', '(', '3+sin(30)', ')']"""
-        function_brackets = False
-        element = ""
+        bracket_splits = []
+        function_right_bracket = False
+        element = BLANK
         for index in range(len(expression)):
             character = expression[index]
             if character not in BRACKETS:
                 element += character
-            ####
-    
+            elif character is LEFT_BRACKET:
+                if element is BLANK:
+                    bracket_splits.append(character)
+                elif element[-1].isalpha() and element[-1].islower():
+                    element += character
+                    function_right_bracket = True
+                else:
+                    bracket_splits.append(element)
+                    bracket_splits.append(character)
+                    element = BLANK
+            elif character is RIGHT_BRACKET:
+                if function_right_bracket == False:
+                    bracket_splits.append(element)
+                    bracket_splits.append(character)
+                    element = BLANK
+                else:
+                    element += character
+                    function_right_bracket = False
+
+        return bracket_splits
+                    
     def _evaluate_basic_operators(self, expression: list, operator_pair: tuple) -> list:
         """Find all operators given in operator pair and evaluate them. The operator pair can contain multiplication and division, or addition and subtraction.
         Return partially evaluated expression."""

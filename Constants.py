@@ -71,5 +71,7 @@ NUMBER_PARTS = ('1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '.')
 MATH_ERROR = "Math ERROR"
 SYNTAX_ERROR = "Syntax ERROR"
 
+BLANK = ""
+
 if __name__ == "__main__":
     print(NOT_STANDALONE)
