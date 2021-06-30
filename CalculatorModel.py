@@ -1,4 +1,4 @@
-"""Model classes for Calculator.py"""
+"""Model classes for ScientificCalculator.py"""
 
 __author__= "Mitchell Clark"
 
@@ -9,30 +9,34 @@ class CalculationProcessor:
     """Handles calculating expressions given by the UI."""
     def process_input(self, expression: str) -> str:
         """Process the operations in the given string."""
-        expression = self._evaluate_brackets(expression)
+        bracket_split = self._split_brackets(expression)
+        self._evaluate_brackets(bracket_split)
+        expression = BLANK.join(bracket_split)
+        
         expression = self._evaluate_operations(expression)
         
         basic_operator_split = self._split_operators(expression)
         self._evaluate_basic_operators(basic_operator_split, (MULTIPLY, DIVIDE))
         self._evaluate_basic_operators(basic_operator_split, (PLUS, MINUS))
         expression = BLANK.join(basic_operator_split)
+        
         return expression
 
-    def _evaluate_brackets(self, expression: str) -> str:
+    def _evaluate_brackets(self, expression: list) -> list:
         """Find all brackets and evaluate expression within appropriately."""
         while LEFT_BRACKET in expression:
             for index in range(len(expression)):
-                character = expression[index]
-                if character is LEFT_BRACKET:
+                element = expression[index]
+                if element is LEFT_BRACKET:
                     left_bracket_position = index
-                elif character is RIGHT_BRACKET:
-                    right_bracket_position = index
+                elif element is RIGHT_BRACKET:
+                    element_for_evaluation = expression[left_bracket_position + 1]
                     break
-
-            bracketed_expression = expression[left_bracket_position + 1:right_bracket_position]
-            evaluated_bracketed_expression = self.process_input(bracketed_expression)
-            old_part_of_expression = expression[left_bracket_position:right_bracket_position + 1]
-            expression = expression.replace(old_part_of_expression, evaluated_bracketed_expression)
+            
+            for count in range(3):
+                expression.pop(left_bracket_position)
+            evaluated_expression = self.process_input(element_for_evaluation)
+            expression.insert(left_bracket_position, evaluated_expression)
         
         return expression
 
@@ -64,6 +68,7 @@ class CalculationProcessor:
     def _split_brackets(self, expression: str) -> list:
         """Split expression into a list seperated by brackets that are not attached to a function.
         E.g. _split_brackets("(32+4)×(3+sin(30))") returns ['(', '32+4', ')', '×', '(', '3+sin(30)', ')']"""
+        # Might be able to simplify
         bracket_splits = []
         function_right_bracket = False
         element = BLANK
@@ -71,6 +76,8 @@ class CalculationProcessor:
             character = expression[index]
             if character not in BRACKETS:
                 element += character
+                if index == len(expression) -1:
+                    bracket_splits.append(element)
             elif character is LEFT_BRACKET:
                 if element is BLANK:
                     bracket_splits.append(character)
@@ -88,9 +95,14 @@ class CalculationProcessor:
                     element = BLANK
                 else:
                     element += character
-                    function_right_bracket = False
-
+                    function_right_bracket = False            
+                
         return bracket_splits
+
+    def _split_advanced_operators(self, expression: str) -> list:
+        """Split an expression string into advanced operations followed by the number to be operated on. E.g '3+4×sin(30)+|-2|' returns
+        ['3+4×', 'sin', '30', ||, -2]."""
+        ###
                     
     def _evaluate_basic_operators(self, expression: list, operator_pair: tuple) -> list:
         """Find all operators given in operator pair and evaluate them. The operator pair can contain multiplication and division, or addition and subtraction.

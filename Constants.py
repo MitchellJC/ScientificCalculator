@@ -1,5 +1,5 @@
 APP_TITLE = "ScientificCalculator"
-NOT_STANDALONE = "This is not a standalone module. Please run CalculatorView.py."
+NOT_STANDALONE = "This is not a standalone module. Please run ScientificCalculator.py."
 
 BUTTON_WIDTH = 8
 INPUT_DISPLAY_WIDTH = BUTTON_WIDTH*8

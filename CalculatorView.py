@@ -1,4 +1,4 @@
-"""Scientific calculator application based on the CASIO fx-82AU PLUS II. GUI module."""
+"""View classes for ScientificCalculator.py"""
 
 __author__ = "Mitchell Clark"
 
@@ -259,12 +259,5 @@ class ButtonsUI(tk.Frame):
                                      width=BUTTON_WIDTH, command=master.request_calculation)
         self._equals_button.pack(side=tk.LEFT)
         
-def main():
-    """Entry point to application."""
-    root = tk.Tk()
-    root.title(APP_TITLE)
-    calculator = CalculatorApp(root)
-    
-
 if __name__ == "__main__":
-    main()
+    print(NOT_STANDALONE)
