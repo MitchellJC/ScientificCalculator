@@ -4,3 +4,6 @@
 
 
 ![Application](Screenshots/ApplicationScreen.PNG)
+
+
+*Figure 1: Main application GUI.*
