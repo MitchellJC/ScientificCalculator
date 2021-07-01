@@ -7,7 +7,6 @@ def main():
     root = tk.Tk()
     root.title(APP_TITLE)
     calculator = CalculatorApp(root)
-    
 
 if __name__ == "__main__":
     main()

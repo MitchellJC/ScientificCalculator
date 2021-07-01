@@ -179,7 +179,12 @@ class ButtonsUI(tk.Frame):
                                      width=BUTTON_WIDTH)
         self._mplus_button.pack(side=tk.LEFT)
 
-        # Fifth row.
+        # Fifth row (arrows here).
+        self._left_arrow = tk.Button(self, text="<<<")
+        self._left_arrow.pack(side=tk.LEFT, fill=tk.Y)
+        self._right_arrow = tk.Button(self, text=">>>")
+        self._right_arrow.pack(side=tk.RIGHT, fill=tk.Y)
+
         self._row_five = tk.Frame(self)
         self._row_five.pack()
 
@@ -198,6 +203,8 @@ class ButtonsUI(tk.Frame):
         self._all_clear_button = tk.Button(self._row_five, text=ALL_CLEAR, \
                                      width=BUTTON_WIDTH, command=master.all_clear)
         self._all_clear_button.pack(side=tk.LEFT)
+
+        
 
         # Sixth row.
         self._row_six = tk.Frame(self)
@@ -258,6 +265,7 @@ class ButtonsUI(tk.Frame):
         self._equals_button = tk.Button(self._row_eight, text=EQUALS, \
                                      width=BUTTON_WIDTH, command=master.request_calculation)
         self._equals_button.pack(side=tk.LEFT)
+        
         
 if __name__ == "__main__":
     print(NOT_STANDALONE)
