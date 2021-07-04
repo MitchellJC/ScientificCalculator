@@ -90,7 +90,7 @@ class ButtonsUI(tk.Frame):
     """Interface for all buttons on the calculator."""
     def __init__(self, master: tk.Tk, **kwargs) -> None:
         """Initialises new ButtonsUI."""
-        super().__init__(master)
+        super().__init__(master, bg="grey")
 
         # First row.
         self._row_one = tk.Frame(self)
