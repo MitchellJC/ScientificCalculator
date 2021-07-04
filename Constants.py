@@ -2,6 +2,12 @@ APP_TITLE = "ScientificCalculator"
 NOT_STANDALONE = "This is not a standalone module. Please run ScientificCalculator.py."
 
 BUTTON_WIDTH = 8
+BUTTON_COLOUR1 = "grey"
+BUTTON_COLOUR2 = "black"
+BUTTON_COLOUR3 = "orange"
+BUTTON_TEXT_COLOUR1 = "white"
+BUTTON_TEXT_COLOUR2 = "black"
+
 INPUT_DISPLAY_WIDTH = BUTTON_WIDTH*8
 
 # Button names.
