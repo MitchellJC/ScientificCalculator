@@ -14,6 +14,7 @@ class CalculatorApp(tk.Frame):
         self.pack()
         
         self._master = master
+        self._master.iconphoto(True, tk.PhotoImage(file="images/icon.png"))
 
         # Input display.
         self._entered_operations = tk.StringVar()
